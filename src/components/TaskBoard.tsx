@@ -10,7 +10,6 @@ import { updateTaskStatus } from "../store/tasksSlice";
 import styled from "styled-components";
 import type { Task } from "../store/tasksSlice";
 import TaskColumn from "./TaskColumn";
-
 import TaskCard from "./TaskCard";
 
 type TaskBoardProps = {
