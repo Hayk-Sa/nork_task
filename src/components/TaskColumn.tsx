@@ -8,8 +8,12 @@ const ColumnWrapper = styled.div`
     flex: 1;
     min-width: 250px;
     background: #f0f2f5;
-    padding: 12px;
     border-radius: 8px;
+    padding: 12px;
+`;
+
+const Title = styled.span`
+    font-size: 20px;
 `;
 
 type Props = {
@@ -23,7 +27,7 @@ const TaskColumn: React.FC<Props> = ({ id, title, tasks }) => {
 
     return (
         <ColumnWrapper ref={setNodeRef}>
-            <h3>{title}</h3>
+            <Title>{title}</Title>
             {tasks.map((task) => (
                 <TaskCard key={task.id} task={task} />
             ))}

@@ -20,8 +20,6 @@ const SidebarTrigger = styled(Button)`
 
 const Content = styled.div`
     flex: 1;
-    margin-left: 80px;
-    padding: 24px;
     overflow-y: auto;
 `;
 
@@ -32,11 +30,11 @@ const MainLayout: React.FC = () => {
     return (
         <>
             <SidebarTrigger type="primary" onClick={() => setOpen(true)}>
-                Add Task
+                Create Task
             </SidebarTrigger>
 
             <Drawer
-                title="Add Task"
+                title="Create Task"
                 placement="left"
                 width={400}
                 onClose={() => setOpen(false)}

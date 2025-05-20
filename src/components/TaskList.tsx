@@ -6,7 +6,7 @@ import type { RootState } from "../store";
 import TaskBoard from "./TaskBoard";
 
 const Container = styled.div`
-    margin: 0 20px;
+    margin: 0 10px;
 `;
 
 const TaskList: React.FC = () => {
@@ -37,7 +37,8 @@ const TaskList: React.FC = () => {
                 style={{
                     display: "flex",
                     gap: 12,
-                    marginTop: 16,
+                    marginTop: 12,
+                    marginLeft: 117,
                     flexWrap: "wrap",
                 }}
             >

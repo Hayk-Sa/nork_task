@@ -11,6 +11,7 @@ import { deleteTask } from "../store/tasksSlice";
 const DraggableWrapper = styled.div<{ isDragging: boolean }>`
     opacity: ${(props) => (props.isDragging ? 0.5 : 1)};
     cursor: grab;
+    margin-top: 10px;
 `;
 
 type Props = {
@@ -81,7 +82,7 @@ const TaskCard: React.FC<Props> = ({ task }) => {
             >
                 <Card
                     size="small"
-                    title={task.title}
+                    title={`Title: ${task.title}`}
                     style={{ marginBottom: 12 }}
                     extra={
                         <div style={{ display: "flex", gap: 8 }}>
@@ -100,16 +101,32 @@ const TaskCard: React.FC<Props> = ({ task }) => {
                         </div>
                     }
                 >
-                    {task.category && <Tag color="blue">{task.category}</Tag>}
+                    {task.category && (
+                        <Tag
+                            style={{
+                                whiteSpace: "pre-wrap",
+                                wordBreak: "break-word",
+                            }}
+                            color="blue"
+                        >
+                            Category: {task.category}
+                        </Tag>
+                    )}
                     {task.priority && (
                         <Tag color={priorityColorMap[task.priority]}>
-                            {task.priority}
+                            Priority: {task.priority}
                         </Tag>
                     )}
                     {task.completed && <Tag color="green">✔ Completed</Tag>}
                     {task.description && (
-                        <div style={{ marginTop: 8, whiteSpace: "pre-wrap" }}>
-                            {task.description}
+                        <div
+                            style={{
+                                marginTop: 8,
+                                whiteSpace: "pre-wrap",
+                                wordBreak: "break-word",
+                            }}
+                        >
+                            Description: {task.description}
                         </div>
                     )}
                 </Card>

@@ -43,7 +43,7 @@ const TaskDetail: React.FC = () => {
                 completed,
                 category,
                 priority: priority || undefined,
-                status, // <- Add this line
+                status,
             };
             dispatch(updateTask(updatedTask));
             navigate("/");
@@ -83,7 +83,7 @@ const TaskDetail: React.FC = () => {
                     { value: "Medium", label: "Medium" },
                     { value: "Low", label: "Low" },
                 ]}
-                style={{ marginBottom: 12 }}
+                style={{ marginBottom: 12, marginRight: 5 }}
             />
             <Select
                 placeholder="Status"
@@ -95,7 +95,7 @@ const TaskDetail: React.FC = () => {
                     { value: "Review", label: "Review" },
                     { value: "Done", label: "Done" },
                 ]}
-                style={{ marginBottom: 12 }}
+                style={{ marginBottom: 12, marginRight: 5 }}
             />
             <Checkbox
                 checked={completed}
