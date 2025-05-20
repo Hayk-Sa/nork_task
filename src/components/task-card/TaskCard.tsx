@@ -1,17 +1,32 @@
 import React, { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import styled from "styled-components";
-import type { Task } from "../store/tasksSlice";
+import type { Task } from "../../store/tasksSlice";
 import { Card, Tag, Tooltip, Modal } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteTask } from "../store/tasksSlice";
+import { deleteTask } from "../../store/tasksSlice";
 
-const DraggableWrapper = styled.div<{ isDragging: boolean }>`
-    opacity: ${(props) => (props.isDragging ? 0.5 : 1)};
+const DraggableWrapper = styled.div<{ $isDragging: boolean }>`
+    opacity: ${(props) => (props.$isDragging ? 0.5 : 1)};
     cursor: grab;
     margin-top: 10px;
+`;
+
+const IconButton = styled.button`
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #555;
+    display: inline-flex;
+    align-items: center;
+
+    &:focus {
+        outline: 2px solid #2684ff;
+        border-radius: 4px;
+    }
 `;
 
 type Props = {
@@ -30,9 +45,7 @@ const TaskCard: React.FC<Props> = ({ task }) => {
         listeners: originalListeners,
         setNodeRef,
         isDragging,
-    } = useDraggable({
-        id: task.id,
-    });
+    } = useDraggable({ id: task.id });
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -65,7 +78,7 @@ const TaskCard: React.FC<Props> = ({ task }) => {
                 target.closest(".taskcard-edit-icon") ||
                 target.closest(".taskcard-delete-icon")
             ) {
-                event.stopPropagation(); // Prevent drag from starting on icon click
+                event.stopPropagation();
                 return;
             }
             originalListeners?.onPointerDown?.(event);
@@ -78,7 +91,10 @@ const TaskCard: React.FC<Props> = ({ task }) => {
                 ref={setNodeRef}
                 {...listeners}
                 {...attributes}
-                isDragging={isDragging}
+                $isDragging={isDragging}
+                role="listitem"
+                tabIndex={0}
+                aria-label={`Task: ${task.title}`}
             >
                 <Card
                     size="small"
@@ -87,30 +103,28 @@ const TaskCard: React.FC<Props> = ({ task }) => {
                     extra={
                         <div style={{ display: "flex", gap: 8 }}>
                             <Tooltip title="Edit">
-                                <EditOutlined
-                                    className="taskcard-edit-icon"
+                                <IconButton
+                                    aria-label="Edit task"
                                     onClick={handleEdit}
-                                />
+                                    className="taskcard-edit-icon"
+                                >
+                                    <EditOutlined />
+                                </IconButton>
                             </Tooltip>
                             <Tooltip title="Delete">
-                                <DeleteOutlined
-                                    className="taskcard-delete-icon"
+                                <IconButton
+                                    aria-label="Delete task"
                                     onClick={handleDeleteClick}
-                                />
+                                    className="taskcard-delete-icon"
+                                >
+                                    <DeleteOutlined />
+                                </IconButton>
                             </Tooltip>
                         </div>
                     }
                 >
                     {task.category && (
-                        <Tag
-                            style={{
-                                whiteSpace: "pre-wrap",
-                                wordBreak: "break-word",
-                            }}
-                            color="blue"
-                        >
-                            Category: {task.category}
-                        </Tag>
+                        <Tag color="blue">Category: {task.category}</Tag>
                     )}
                     {task.priority && (
                         <Tag color={priorityColorMap[task.priority]}>
@@ -140,8 +154,11 @@ const TaskCard: React.FC<Props> = ({ task }) => {
                 okText="Yes, delete"
                 okType="danger"
                 cancelText="Cancel"
+                aria-labelledby={`delete-task-${task.id}`}
             >
-                <p>"{task.title}" will be permanently removed.</p>
+                <p id={`delete-task-${task.id}`}>
+                    "{task.title}" will be permanently removed.
+                </p>
             </Modal>
         </>
     );

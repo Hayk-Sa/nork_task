@@ -6,11 +6,11 @@ import {
     type DragStartEvent,
 } from "@dnd-kit/core";
 import { useDispatch } from "react-redux";
-import { updateTaskStatus } from "../store/tasksSlice";
+import { updateTaskStatus } from "../../store/tasksSlice";
 import styled from "styled-components";
-import type { Task } from "../store/tasksSlice";
-import TaskColumn from "./TaskColumn";
-import TaskCard from "./TaskCard";
+import type { Task } from "../../store/tasksSlice";
+import TaskColumn from "../task-column/TaskColumn";
+import TaskCard from "../task-card/TaskCard";
 
 type TaskBoardProps = {
     tasks: Task[];
@@ -23,22 +23,36 @@ const BoardWrapper = styled.div`
     overflow-x: auto;
 `;
 
+const LiveRegion = styled.div.attrs({
+    "aria-live": "polite",
+    "aria-atomic": "true",
+})`
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+`;
+
 const statuses: Task["status"][] = ["Todo", "In Progress", "Review", "Done"];
 
 const TaskBoard: React.FC<TaskBoardProps> = ({ tasks }) => {
     const dispatch = useDispatch();
     const [activeTask, setActiveTask] = useState<Task | null>(null);
+    const [announcement, setAnnouncement] = useState("");
 
     const handleDragStart = (event: DragStartEvent) => {
         const draggedTask = tasks.find((t) => t.id === event.active.id);
         if (draggedTask) {
             setActiveTask(draggedTask);
+            setAnnouncement(`Picked up ${draggedTask.title}`);
         }
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        setActiveTask(null); // Reset after drop
+        setActiveTask(null);
 
         if (!over || active.id === over.id) return;
 
@@ -53,11 +67,13 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks }) => {
                 newStatus: targetStatus,
             })
         );
+
+        setAnnouncement(`Moved ${activeTask.title} to ${targetStatus}`);
     };
 
     return (
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-            <BoardWrapper>
+            <BoardWrapper role="region" aria-label="Task Board">
                 {statuses.map((status) => (
                     <TaskColumn
                         key={status}
@@ -69,8 +85,15 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks }) => {
             </BoardWrapper>
 
             <DragOverlay>
-                {activeTask ? <TaskCard task={activeTask} /> : null}
+                {activeTask ? (
+                    <TaskCard
+                        task={activeTask}
+                        aria-label={`Dragging ${activeTask.title}`}
+                    />
+                ) : null}
             </DragOverlay>
+
+            <LiveRegion>{announcement}</LiveRegion>
         </DndContext>
     );
 };

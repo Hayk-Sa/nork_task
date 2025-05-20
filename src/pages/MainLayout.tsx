@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Drawer, Button, Empty } from "antd";
 import styled from "styled-components";
-import TaskList from "./TaskList";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
-import TaskForm from "./TaskForm";
+import { TaskForm } from "../components/task-form";
+import { TaskList } from "../components/task-list";
 
 const Layout = styled.div`
     display: flex;
@@ -13,14 +13,35 @@ const Layout = styled.div`
 
 const SidebarTrigger = styled(Button)`
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 34px;
+    left: 27px;
     z-index: 1000;
 `;
 
-const Content = styled.div`
+const Content = styled.main`
     flex: 1;
     overflow-y: auto;
+    padding: 10px;
+`;
+
+const SkipLink = styled.a`
+    position: absolute;
+    left: -999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+
+    &:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        margin: 8px;
+        padding: 4px;
+        background: #000;
+        color: #fff;
+        z-index: 1001;
+    }
 `;
 
 const MainLayout: React.FC = () => {
@@ -29,7 +50,13 @@ const MainLayout: React.FC = () => {
 
     return (
         <>
-            <SidebarTrigger type="primary" onClick={() => setOpen(true)}>
+            <SkipLink href="#main-content">Skip to main content</SkipLink>
+
+            <SidebarTrigger
+                type="primary"
+                onClick={() => setOpen(true)}
+                aria-label="Open drawer to create a new task"
+            >
                 Create Task
             </SidebarTrigger>
 
@@ -40,12 +67,13 @@ const MainLayout: React.FC = () => {
                 onClose={() => setOpen(false)}
                 open={open}
                 destroyOnClose
+                aria-label="Task creation drawer"
             >
                 <TaskForm onTaskAdded={() => setOpen(false)} />
             </Drawer>
 
             <Layout>
-                <Content>
+                <Content id="main-content" role="main">
                     {tasks.length === 0 ? (
                         <Empty description="No tasks available. Add one!" />
                     ) : (

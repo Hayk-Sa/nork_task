@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store";
-import TaskDetail from "./components/TaskDetail";
-import MainLayout from "./components/MainLayout";
+import TaskDetail from "./pages/TaskDetail";
+import MainLayout from "./pages/MainLayout";
 
 const App: React.FC = () => (
     <Provider store={store}>

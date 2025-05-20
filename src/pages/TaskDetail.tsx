@@ -7,9 +7,17 @@ import { Input, Button, Checkbox, Select } from "antd";
 import styled from "styled-components";
 import type { AppDispatch, RootState } from "../store";
 
-const Container = styled.div`
+const Container = styled.main`
     max-width: 600px;
     margin: 20px auto;
+    padding: 16px;
+`;
+
+const Label = styled.label`
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+    margin-top: 12px;
 `;
 
 const TaskDetail: React.FC = () => {
@@ -19,6 +27,7 @@ const TaskDetail: React.FC = () => {
     const task = useSelector((state: RootState) =>
         state.tasks.tasks.find((t) => t.id === taskId)
     );
+
     const [category, setCategory] = useState(task?.category || "");
     const [priority, setPriority] = useState<"High" | "Medium" | "Low" | "">(
         task?.priority || ""
@@ -53,28 +62,37 @@ const TaskDetail: React.FC = () => {
     if (!task) return null;
 
     return (
-        <Container>
-            <h2>Edit Task</h2>
+        <Container role="main" aria-labelledby="edit-task-heading">
+            <h1 id="edit-task-heading">Edit Task</h1>
+
+            <Label htmlFor="task-title">Title</Label>
             <Input
+                id="task-title"
                 placeholder="Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                style={{ marginBottom: 12 }}
             />
+
+            <Label htmlFor="task-category">Category</Label>
             <Input
+                id="task-category"
                 placeholder="Category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                style={{ marginBottom: 12 }}
             />
+
+            <Label htmlFor="task-desc">Description</Label>
             <Input.TextArea
+                id="task-desc"
                 placeholder="Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                style={{ marginBottom: 12 }}
             />
+
+            <Label htmlFor="task-priority">Priority</Label>
             <Select
+                id="task-priority"
                 placeholder="Priority"
                 value={priority || undefined}
                 onChange={(value) => setPriority(value)}
@@ -83,9 +101,12 @@ const TaskDetail: React.FC = () => {
                     { value: "Medium", label: "Medium" },
                     { value: "Low", label: "Low" },
                 ]}
-                style={{ marginBottom: 12, marginRight: 5 }}
+                style={{ width: "100%" }}
             />
+
+            <Label htmlFor="task-status">Status</Label>
             <Select
+                id="task-status"
                 placeholder="Status"
                 value={status}
                 onChange={(value) => setStatus(value)}
@@ -95,22 +116,34 @@ const TaskDetail: React.FC = () => {
                     { value: "Review", label: "Review" },
                     { value: "Done", label: "Done" },
                 ]}
-                style={{ marginBottom: 12, marginRight: 5 }}
+                style={{ width: "100%" }}
             />
+
             <Checkbox
                 checked={completed}
                 onChange={(e) => setCompleted(e.target.checked)}
-                style={{ marginBottom: 12 }}
+                aria-label="Mark task as completed"
+                style={{ marginTop: 12 }}
             >
                 Completed
             </Checkbox>
-            <br />
-            <Button type="primary" onClick={handleSave}>
-                Save
-            </Button>
-            <Button style={{ marginLeft: 10 }} onClick={() => navigate("/")}>
-                Cancel
-            </Button>
+
+            <div style={{ marginTop: 16 }}>
+                <Button
+                    type="primary"
+                    onClick={handleSave}
+                    aria-label="Save changes to task"
+                >
+                    Save
+                </Button>
+                <Button
+                    onClick={() => navigate("/")}
+                    style={{ marginLeft: 10 }}
+                    aria-label="Cancel editing and return to task list"
+                >
+                    Cancel
+                </Button>
+            </div>
         </Container>
     );
 };
