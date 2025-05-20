@@ -2,6 +2,8 @@
 
 A simple task management application built with **React**, **Redux Toolkit**, **Ant Design**, and **@dnd-kit** for drag-and-drop support.
 
+Demo: https://nork-task.vercel.app/
+
 ---
 
 ## 🚀 Setup Instructions
